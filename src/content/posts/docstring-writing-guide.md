@@ -3,7 +3,7 @@ title: docstring 작성 가이드
 date: 2026-08-22
 category: AI
 kind: long
-blurb: 공식 지침은 3~4문장부터 시작하라고 합니다.
+blurb: 3~4문장부터 시작합니다.
 featured: true
 tags: [agent, tool-design, prompt]
 series: 에이전트 도구 docstring
