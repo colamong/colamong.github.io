@@ -19,7 +19,11 @@ import sys
 from pathlib import Path
 
 VIEWPORT = 900          # 기준 뷰포트 높이(px)
-MAX_SCREENS = 3.0
+
+# 갈래별 상한. 단일 상한(3.0)은 갈래를 구분하지 못했다 —
+# 노트에는 과하게 관대하고 긴 글에는 빡빡했다. 2026-09-06 분리.
+MAX_SCREENS = {'long': 4.0, 'note': 2.0, 'link': 1.0}
+DEFAULT_MAX = 3.0
 
 # 보정된 높이 모델 (px)
 # 2026-09-06 재보정. 첫 상수는 26~35% 과대평가해서 상한 안쪽 글을 막았다.
@@ -89,15 +93,17 @@ def main():
         screens = px / VIEWPORT
         svg = parts['그림']
         detail = ' · '.join(f'{k} {v}' for k, v in parts.items() if v)
+        kind = meta.get('kind', 'note')
+        cap = MAX_SCREENS.get(kind, DEFAULT_MAX)
 
         if svg < 1:
             fails.append((f, f'그림이 없다 — 글마다 SVG 를 하나 이상 넣는다 ({detail})'))
-        elif screens > MAX_SCREENS:
-            over = px - VIEWPORT * MAX_SCREENS
-            fails.append((f, f'{screens:.1f} 스크롤 — 상한 {MAX_SCREENS} 초과. '
+        elif screens > cap:
+            over = px - VIEWPORT * cap
+            fails.append((f, f'{screens:.1f} 스크롤 — {kind} 상한 {cap} 초과. '
                              f'약 {int(over / PER_CHAR)}자 줄이거나 두 편으로 나눈다 ({detail})'))
         else:
-            print(f'  OK   {f.name}  {screens:.1f} 스크롤 · 그림 {svg}개')
+            print(f'  OK   {f.name}  {screens:.1f}/{cap} 스크롤({kind}) · 그림 {svg}개')
 
     if skipped:
         print(f'  (draft {skipped}편 건너뜀)')

@@ -54,5 +54,16 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         <a href="https://github.com/colamong">GitHub</a>
       </footer>
     </div>
+
+    <script>
+      // 바깥 링크는 새 창으로. 출처를 눌러도 읽던 자리를 잃지 않는다.
+      // noopener 로 새 창이 원래 창을 조작하지 못하게 막는다.
+      for (const a of document.querySelectorAll('a[href^="http"]')) {
+        if (a instanceof HTMLAnchorElement && a.host !== location.host) {
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+        }
+      }
+    </script>
   </body>
 </html>

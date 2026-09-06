@@ -32,6 +32,10 @@ const posts = defineCollection({
     tags: z.array(z.string()).default([]),
     // kind: 'link' 일 때 원문 주소
     href: z.string().url().optional(),
+    // 이어지는 글. 같은 series 값을 가진 글끼리 part 순서로 묶인다.
+    // 3 스크롤 상한 때문에 나눈 글을 독자가 이어 읽게 하려는 장치다.
+    series: z.string().optional(),
+    part: z.number().int().positive().optional(),
   }),
 });
 

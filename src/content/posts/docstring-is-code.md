@@ -6,6 +6,8 @@ kind: long
 blurb: 주석이 아니라 인터페이스입니다.
 featured: true
 tags: [agent, tool-design, prompt]
+series: 에이전트 도구 docstring
+part: 1
 ---
 
 일반 코드에서 docstring은 사람을 위한 설명입니다. 프로그램에 영향을 주지 않습니다. 그래서 바쁘면 생략하고, 시그니처만 봐도 알 만하면 한 줄로 끝내는 경우가 많습니다.
@@ -59,7 +61,9 @@ tags: [agent, tool-design, prompt]
 
 ## Model 과 docstring
 
-도구를 등록하면 모델에게 전달되는 것은 이름과 파라미터 스키마와 docstring 입니다. 함수 본문은 안 갑니다. 즉 모델 입장에서 이 도구가 무엇을 하는지 알 방법은 docstring 하나뿐입니다.
+API 필드 이름은 `description` 입니다. Python SDK 는 함수의 docstring 을 그 필드에 그대로 넣고, `Args:` 절을 파라미터 설명으로 씁니다.
+
+도구를 등록하면 모델에게 전달되는 것은 이름과 파라미터 스키마와 이 설명뿐입니다. 함수 본문은 안 갑니다. 즉 모델 입장에서 이 도구가 무엇을 하는지 알 방법은 docstring 하나뿐입니다.
 
 공식 문서도 같은 말을 합니다. [Tool use with Claude](https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview) 첫 문단은 이렇게 시작합니다.
 
@@ -86,7 +90,7 @@ tags: [agent, tool-design, prompt]
 
 "무엇을 못 하는가"가 특히 중요합니다. 모델은 도구가 만능이라고 가정하고 부릅니다. 한계를 안 적으면 빈 결과를 받고 나서 스스로 지어냅니다.
 
-네 항목을 실제로 어떻게 쓰는지는 [도구 설명에는 못 하는 일까지 적습니다](/posts/docstring-writing-guide/)에서 공식 지침과 예시로 다뤘습니다.
+네 항목을 실제로 어떻게 쓰는지는 [docstring 작성 가이드](/posts/docstring-writing-guide/)에서 공식 지침과 예시로 다뤘습니다.
 
 ## Docstring을 리뷰하자
 

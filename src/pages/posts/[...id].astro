@@ -15,6 +15,15 @@ const { Content } = await render(post);
 
 const d = post.data.date;
 const date = `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+
+// 이어지는 글. 3 스크롤 상한 때문에 나눈 글을 독자가 이어 읽게 한다.
+let siblings: any[] = [];
+if (post.data.series) {
+  siblings = (await getCollection('posts', ({ data }: any) => !data.draft))
+    .filter((p: any) => p.data.series === post.data.series)
+    .sort((a: any, b: any) => (a.data.part ?? 0) - (b.data.part ?? 0));
+}
+const next = siblings.find((p: any) => (p.data.part ?? 0) === (post.data.part ?? 0) + 1);
 ---
 
 <Base title={`${post.data.title} — colamong`} description={post.data.blurb}>
@@ -28,9 +37,36 @@ const date = `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${
       </div>
       <h1 class="post__title">{post.data.title}</h1>
       <p class="post__blurb">{post.data.blurb}</p>
+      {
+        siblings.length > 1 && (
+          <nav class="series">
+            <span class="series__name">{post.data.series}</span>
+            {siblings.map((p: any) =>
+              p.id === post.id ? (
+                <span class="series__here">{p.data.part}부</span>
+              ) : (
+                <a class="series__link" href={`/posts/${p.id}/`}>
+                  {p.data.part}부
+                </a>
+              )
+            )}
+          </nav>
+        )
+      }
     </header>
     <div class="prose">
       <Content />
     </div>
+    {
+      next && (
+        <aside class="next">
+          <span class="next__label">다음 편</span>
+          <a class="next__link" href={`/posts/${next.id}/`}>
+            {next.data.title}
+          </a>
+          <span class="next__blurb">{next.data.blurb}</span>
+        </aside>
+      )
+    }
   </article>
 </Base>

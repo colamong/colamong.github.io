@@ -25,8 +25,14 @@ const rest = all.filter((p: any) => !featured.includes(p));
     )
   }
 
-  <section class="sec">
-    <h2 class="sec__title">{featured.length > 0 ? '전체' : '글'}</h2>
-    <PostList posts={rest} />
-  </section>
+  {
+    rest.length > 0 && (
+      <section class="sec">
+        <h2 class="sec__title">{featured.length > 0 ? '전체' : '글'}</h2>
+        <PostList posts={rest} />
+      </section>
+    )
+  }
+
+  {all.length === 0 && <p class="row__blurb">아직 글이 없습니다.</p>}
 </Base>

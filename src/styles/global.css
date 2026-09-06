@@ -304,6 +304,79 @@ a.row__link:hover .row__title {
   }
 }
 
+/* 이어지는 글. 제목 아래 한 줄, 본문 끝에 다음 편 하나. */
+.series {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+  font-size: 0.8rem;
+}
+.series__name {
+  color: var(--muted);
+}
+.series__here {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+}
+.series__link {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--line);
+}
+.series__link:hover {
+  color: var(--ink);
+}
+
+.next {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-top: 3rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+.next__label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.next__link {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.next__link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.next__blurb {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* 체크리스트. 불릿과 체크박스가 겹쳐 보이므로 불릿을 지운다. */
+.prose .contains-task-list {
+  list-style: none;
+  padding-left: 0;
+}
+.prose .task-list-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.prose .task-list-item input[type='checkbox'] {
+  accent-color: var(--accent);
+  margin: 0;
+  flex: none;
+}
+
 /* 글 안의 그림. 모든 글에 하나 이상 들어간다 — 선은 currentColor 라 다크 모드가 따라온다. */
 .prose figure {
   margin: 2rem 0;
