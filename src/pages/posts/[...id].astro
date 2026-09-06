@@ -1,0 +1,36 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }: any) => !data.draft);
+  // 링크 유형은 원문으로 바로 보낸다. 본문이 없으니 페이지를 만들지 않는다.
+  return posts
+    .filter((p: any) => p.data.kind !== 'link')
+    .map((p: any) => ({ params: { id: p.id }, props: { post: p } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const d = post.data.date;
+const date = `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+---
+
+<Base title={`${post.data.title} — colamong`} description={post.data.blurb}>
+  <article>
+    <header class="post__head">
+      <div class="post__meta">
+        <a class="post__cat" href={`/categories/${encodeURIComponent(post.data.category)}/`}>
+          {post.data.category}
+        </a>
+        <span class="post__date">{date}</span>
+      </div>
+      <h1 class="post__title">{post.data.title}</h1>
+      <p class="post__blurb">{post.data.blurb}</p>
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+</Base>

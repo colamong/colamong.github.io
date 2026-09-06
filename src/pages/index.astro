@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PostList from '../components/PostList.astro';
+
+const all = (await getCollection('posts', ({ data }: any) => !data.draft)).sort(
+  (a: any, b: any) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+// 큐레이션이 먼저다. 최신순만 두면 방금 쓴 글이 대표작 자리를 차지한다.
+const featured = all.filter((p: any) => p.data.featured).slice(0, 5);
+const rest = all.filter((p: any) => !featured.includes(p));
+---
+
+<Base
+  title="colamong — 에이전트를 실제로 굴리면서 남기는 기록"
+  description="AI 에이전트 운영, 백엔드·시스템 설계, 개발 방법론을 기록합니다."
+>
+  {
+    featured.length > 0 && (
+      <section class="sec">
+        <h2 class="sec__title">직접 고른 글</h2>
+        <PostList posts={featured} />
+      </section>
+    )
+  }
+
+  <section class="sec">
+    <h2 class="sec__title">{featured.length > 0 ? '전체' : '글'}</h2>
+    <PostList posts={rest} />
+  </section>
+</Base>

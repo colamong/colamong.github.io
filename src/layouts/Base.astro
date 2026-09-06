@@ -1,0 +1,58 @@
+---
+import '../styles/global.css';
+import { CATEGORIES } from '../content.config';
+
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
+const site = 'colamong';
+const tagline = '에이전트를 실제로 굴리면서 남기는 기록';
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" type="application/rss+xml" title={site} href="/rss.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="site">
+        <a class="site__name" href="/">{site}</a>
+        <span class="site__tag">{tagline}</span>
+        <nav class="site__cats">
+          {
+            CATEGORIES.map((c) => (
+              <a class="site__cat" href={`/categories/${encodeURIComponent(c)}/`}>
+                {c}
+              </a>
+            ))
+          }
+        </nav>
+      </header>
+
+      <main>
+        <slot />
+      </main>
+
+      <footer class="foot">
+        <a href="/">홈</a>
+        <a href="/rss.xml">RSS</a>
+        <a href="https://github.com/colamong">GitHub</a>
+      </footer>
+    </div>
+  </body>
+</html>

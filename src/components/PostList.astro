@@ -1,0 +1,36 @@
+---
+import { KIND_LABEL } from '../content.config';
+
+interface Props {
+  posts: any[];
+}
+const { posts } = Astro.props;
+
+const fmt = (d: Date) =>
+  `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+---
+
+<ul class="list">
+  {
+    posts.map((p) => {
+      const external = p.data.kind === 'link' && p.data.href;
+      const href = external ? p.data.href : `/posts/${p.id}/`;
+      return (
+        <li class="row">
+          <a
+            class="row__link"
+            href={href}
+            {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+          >
+            <span class="row__top">
+              <span class="row__title">{p.data.title}</span>
+              <span class="badge">{KIND_LABEL[p.data.kind]}</span>
+              <span class="row__date">{fmt(p.data.date)}</span>
+            </span>
+          </a>
+          <span class="row__blurb">{p.data.blurb}</span>
+        </li>
+      );
+    })
+  }
+</ul>

@@ -1,0 +1,321 @@
+@import url('/fonts/pretendard/pretendard.css');
+
+/* 시안 C — 모노 라벨 + 액센트 하나.
+   액센트는 대분류와 섹션 이름에만 쓴다. 한 군데라도 더 쓰면 금방 촌스러워진다. */
+:root {
+  --bg: #fcfcfd;
+  --ink: #101114;
+  --muted: #71737d;
+  --line: #e3e3e8;
+  --accent: #c2410c;
+  --code-bg: #f4f4f6;
+
+  --sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
+    'Apple SD Gothic Neo', system-ui, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  --measure: 34rem;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e0f13;
+    --ink: #e8e9ee;
+    --muted: #9497a3;
+    --line: #2a2d36;
+    --accent: #fb923c;
+    --code-bg: #191b21;
+    color-scheme: dark;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.shell {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 5rem 1.5rem 6rem;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ── 머리 ─────────────────────────────── */
+.site {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 3.5rem;
+}
+.site__name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.site__tag {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.site__cats {
+  display: flex;
+  gap: 1.25rem;
+  margin-top: 0.9rem;
+  flex-wrap: wrap;
+}
+.site__cat {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.site__cat:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ── 섹션 ─────────────────────────────── */
+.sec {
+  margin-bottom: 3rem;
+}
+/* 한글이 들어가는 라벨은 sans 다. 모노에는 한글이 없어서 fallback 으로 떨어지고,
+   거기에 자간까지 주면 글자가 벌어져 보인다. 모노는 영문 대분류와 날짜에만 쓴다. */
+.sec__title {
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+  font-weight: 500;
+  margin: 0 0 1.15rem;
+}
+
+/* ── 글 목록 ───────────────────────────── */
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.row__top {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.row__title {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+a.row__link:hover .row__title {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.badge {
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  letter-spacing: 0;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 0.05rem 0.4rem;
+  white-space: nowrap;
+}
+.row__date {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.row__blurb {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ── 글 ───────────────────────────────── */
+.post__head {
+  margin-bottom: 2.5rem;
+}
+.post__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+.post__cat {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.post__date {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.post__title {
+  font-size: 1.65rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.35;
+  margin: 0 0 0.5rem;
+  text-wrap: balance;
+}
+.post__blurb {
+  color: var(--muted);
+  margin: 0;
+}
+
+.prose {
+  max-width: var(--measure);
+}
+.prose h2 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 2.75rem 0 0.9rem;
+}
+.prose h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 2rem 0 0.6rem;
+}
+.prose p,
+.prose li {
+  font-size: 0.97rem;
+}
+.prose ul,
+.prose ol {
+  padding-left: 1.2rem;
+}
+.prose a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--line);
+}
+.prose a:hover {
+  text-decoration-color: var(--accent);
+}
+.prose blockquote {
+  margin: 1.5rem 0;
+  padding-left: 1rem;
+  border-left: 2px solid var(--line);
+  color: var(--muted);
+}
+.prose code {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  background: var(--code-bg);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+.prose pre {
+  background: var(--code-bg);
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+}
+.prose pre code {
+  background: none;
+  padding: 0;
+}
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.tablewrap {
+  overflow-x: auto;
+}
+.prose th,
+.prose td {
+  text-align: left;
+  padding: 0.55rem 0.7rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+.prose th {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+.prose img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ── 꼬리 ─────────────────────────────── */
+.foot {
+  margin-top: 4rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.foot a:hover {
+  color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* 글 안의 그림. 모든 글에 하나 이상 들어간다 — 선은 currentColor 라 다크 모드가 따라온다. */
+.prose figure {
+  margin: 2rem 0;
+}
+.prose figure svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.prose figcaption {
+  margin-top: 0.6rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+  text-align: center;
+}

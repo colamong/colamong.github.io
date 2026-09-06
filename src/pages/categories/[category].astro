@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import { CATEGORIES } from '../../content.config';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }: any) => !data.draft);
+  return CATEGORIES.map((category) => ({
+    params: { category },
+    props: {
+      category,
+      posts: posts
+        .filter((p: any) => p.data.category === category)
+        .sort((a: any, b: any) => b.data.date.valueOf() - a.data.date.valueOf()),
+    },
+  }));
+}
+
+const { category, posts } = Astro.props;
+---
+
+<Base title={`${category} — colamong`} description={`${category} 분류의 글 ${posts.length}편`}>
+  <section class="sec">
+    <h2 class="sec__title">{category}</h2>
+    {posts.length > 0 ? <PostList posts={posts} /> : <p class="row__blurb">아직 글이 없습니다.</p>}
+  </section>
+</Base>
