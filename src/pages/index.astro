@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import PostList from '../components/PostList.astro';
+import { SITE } from '../site';
 
 const all = (await getCollection('posts', ({ data }: any) => !data.draft)).sort(
   (a: any, b: any) => b.data.date.valueOf() - a.data.date.valueOf()
@@ -12,10 +13,7 @@ const featured = all.filter((p: any) => p.data.featured).slice(0, 5);
 const rest = all.filter((p: any) => !featured.includes(p));
 ---
 
-<Base
-  title="colamong — 에이전트를 실제로 굴리면서 남기는 기록"
-  description="AI 에이전트 운영, 백엔드·시스템 설계, 개발 방법론을 기록합니다."
->
+<Base title={`${SITE.name} — ${SITE.tagline}`} description={SITE.tagline}>
   {
     featured.length > 0 && (
       <section class="sec">

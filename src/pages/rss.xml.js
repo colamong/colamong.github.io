@@ -1,5 +1,6 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
+import { SITE } from '../site';
 
 export async function GET(context) {
   const posts = (await getCollection('posts', ({ data }) => !data.draft)).sort(
@@ -7,8 +8,8 @@ export async function GET(context) {
   );
 
   return rss({
-    title: 'colamong',
-    description: '에이전트를 실제로 굴리면서 남기는 기록',
+    title: SITE.name,
+    description: SITE.tagline,
     site: context.site,
     items: posts.map((p) => ({
       title: p.data.title,

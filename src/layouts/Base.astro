@@ -1,14 +1,15 @@
 ---
 import '../styles/global.css';
 import { CATEGORIES } from '../content.config';
+import { SITE } from '../site';
 
 interface Props {
   title: string;
   description: string;
 }
 const { title, description } = Astro.props;
-const site = 'colamong';
-const tagline = '에이전트를 실제로 굴리면서 남기는 기록';
+const site = SITE.name;
+const tagline = SITE.tagline;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
