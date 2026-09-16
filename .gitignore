@@ -2,3 +2,11 @@ dist/
 node_modules/
 .astro/
 .DS_Store
+
+# 린트 스크립트를 import 하면 생긴다
+__pycache__/
+
+# AI 작성 하네스 — 로컬에만 둔다.
+# 파일은 그대로 남아 로드되고, 공개 저장소에만 안 올라간다.
+.claude/
+CLAUDE.md
