@@ -238,6 +238,30 @@ a.row__link:hover .row__title {
   border-left: 2px solid var(--line);
   color: var(--muted);
 }
+/* 영문 인용 번역 토글: 열면 원문 대신 번역을 보여 준다 */
+.prose .quote-tr details summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--line);
+}
+.prose .quote-tr details summary::-webkit-details-marker {
+  display: none;
+}
+.prose .quote-tr details summary:hover {
+  text-decoration-color: var(--accent);
+}
+.prose .quote-tr .to-en,
+.prose .quote-tr details[open] .to-ko,
+.prose .quote-tr:has(details[open]) .quote-en {
+  display: none;
+}
+.prose .quote-tr details[open] .to-en {
+  display: inline;
+}
 .prose code {
   font-family: var(--mono);
   font-size: 0.85em;
