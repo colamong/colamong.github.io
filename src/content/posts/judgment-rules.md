@@ -52,15 +52,13 @@ Anthropic과 OpenAI의 문서, GitLab·Datadog 문서팀의 사례가 이 순서
 주관적인 규칙은 일부러 자동화하지 않습니다.
 
 <blockquote class="quote-tr">
-<p class="quote-en">If the rule is too subjective, it cannot be adequately enforced and creates unnecessary additional warnings.</p>
-<details><summary><span class="to-ko">한국어로 보기</span><span class="to-en">원문 보기</span></summary><p>규칙이 너무 주관적이면 제대로 강제할 수 없고, 불필요한 경고만 늘어납니다.</p></details>
+<label title="눌러서 번역 보기"><input type="checkbox"><span class="quote-en">If the rule is too subjective, it cannot be adequately enforced and creates unnecessary additional warnings.</span><span class="quote-ko">규칙이 너무 주관적이면 제대로 강제할 수 없고, 불필요한 경고만 늘어납니다.</span></label>
 </blockquote>
 
 OpenAI도 [Codex 코드 리뷰 규칙](https://developers.openai.com/blog/custom-code-review-rules-for-codex)을 같은 기준으로 나눕니다.
 
 <blockquote class="quote-tr">
-<p class="quote-en">Keep formatting and other mechanical checks in CI.</p>
-<details><summary><span class="to-ko">한국어로 보기</span><span class="to-en">원문 보기</span></summary><p>서식 검사처럼 기계적인 검사는 CI에 두세요.</p></details>
+<label title="눌러서 번역 보기"><input type="checkbox"><span class="quote-en">Keep formatting and other mechanical checks in CI.</span><span class="quote-ko">서식 검사처럼 기계적인 검사는 CI에 두세요.</span></label>
 </blockquote>
 
 ## 정규식 한 줄의 실험
@@ -119,8 +117,7 @@ IBM Research가 참여한 [ICLR 2025 논문](https://research.ibm.com/publicatio
 [Claude Code 문서](https://code.claude.com/docs/en/best-practices)는 마지막 방법의 이유를 이렇게 설명합니다.
 
 <blockquote class="quote-tr">
-<p class="quote-en">A reviewer prompted to find gaps will usually report some, even when the work is sound, because that is what it was asked to do.</p>
-<details><summary><span class="to-ko">한국어로 보기</span><span class="to-en">원문 보기</span></summary><p>결함을 찾으라는 지시를 받은 리뷰어는 작업에 문제가 없어도 대개 무언가를 보고합니다. 그렇게 하라고 요청받았기 때문입니다.</p></details>
+<label title="눌러서 번역 보기"><input type="checkbox"><span class="quote-en">A reviewer prompted to find gaps will usually report some, even when the work is sound, because that is what it was asked to do.</span><span class="quote-ko">결함을 찾으라는 지시를 받은 리뷰어는 작업에 문제가 없어도 대개 무언가를 보고합니다. 그렇게 하라고 요청받았기 때문입니다.</span></label>
 </blockquote>
 
 ## 3단계 배치
@@ -164,15 +161,13 @@ IBM Research가 참여한 [ICLR 2025 논문](https://research.ibm.com/publicatio
 Anthropic은 [에이전트 평가 글](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents)에서 이 순서를 권합니다.
 
 <blockquote class="quote-tr">
-<p class="quote-en">We recommend choosing deterministic graders where possible, LLM graders where necessary or for additional flexibility, and using human graders judiciously for additional validation.</p>
-<details><summary><span class="to-ko">한국어로 보기</span><span class="to-en">원문 보기</span></summary><p>가능하면 결정적 채점기를 쓰고, 필요하거나 유연성이 더 필요할 때는 LLM 채점기를 쓰기를 권합니다. 추가 검증에는 사람 채점자를 신중하게 씁니다.</p></details>
+<label title="눌러서 번역 보기"><input type="checkbox"><span class="quote-en">We recommend choosing deterministic graders where possible, LLM graders where necessary or for additional flexibility, and using human graders judiciously for additional validation.</span><span class="quote-ko">가능하면 결정적 채점기를 쓰고, 필요하거나 유연성이 더 필요할 때는 LLM 채점기를 쓰기를 권합니다. 추가 검증에는 사람 채점자를 신중하게 씁니다.</span></label>
 </blockquote>
 
 Datadog 문서팀은 [기여 안내서](https://github.com/DataDog/documentation/blob/master/CONTRIBUTING.md)에 같은 판단을 적어 두었습니다.
 
 <blockquote class="quote-tr">
-<p class="quote-en">AI tools may not follow the Datadog documentation style guide or Vale linting rules. Run <code>vale</code> on your changes and fix any issues before submitting.</p>
-<details><summary><span class="to-ko">한국어로 보기</span><span class="to-en">원문 보기</span></summary><p>AI 도구는 Datadog 문서 스타일 가이드나 Vale 린트 규칙을 따르지 않을 수 있습니다. 제출하기 전에 변경 사항에 <code>vale</code>을 실행해 문제를 고치세요.</p></details>
+<label title="눌러서 번역 보기"><input type="checkbox"><span class="quote-en">AI tools may not follow the Datadog documentation style guide or Vale linting rules. Run <code>vale</code> on your changes and fix any issues before submitting.</span><span class="quote-ko">AI 도구는 Datadog 문서 스타일 가이드나 Vale 린트 규칙을 따르지 않을 수 있습니다. 제출하기 전에 변경 사항에 <code>vale</code>을 실행해 문제를 고치세요.</span></label>
 </blockquote>
 
 ## 규칙을 적는 순서

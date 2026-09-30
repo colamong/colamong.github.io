@@ -123,8 +123,7 @@ Claude Code가 하네스이고, 모델은 하네스 안에서 호출되는 구�
 [Claude Code 공식 문서](https://code.claude.com/docs/en/features-overview)도 같은 기준을 제시합니다.
 
 <blockquote class="quote-tr">
-<p class="quote-en">If a rule must hold every time, make it a hook rather than a prompt instruction.</p>
-<details><summary><span class="to-ko">한국어로 보기</span><span class="to-en">원문 보기</span></summary><p>규칙이 매번 지켜져야 한다면 프롬프트 지시문이 아니라 훅으로 만드세요.</p></details>
+<label title="눌러서 번역 보기"><input type="checkbox"><span class="quote-en">If a rule must hold every time, make it a hook rather than a prompt instruction.</span><span class="quote-ko">규칙이 매번 지켜져야 한다면 프롬프트 지시문이 아니라 훅으로 만드세요.</span></label>
 </blockquote>
 
 명사형 규칙은 이 질문에 '예'였습니다.\

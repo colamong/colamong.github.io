@@ -238,29 +238,77 @@ a.row__link:hover .row__title {
   border-left: 2px solid var(--line);
   color: var(--muted);
 }
-/* 영문 인용 번역 토글: 열면 원문 대신 번역을 보여 준다 */
-.prose .quote-tr details summary {
+/* 영문 인용 번역 토글: 인용문을 누르면 원문과 번역이 바뀐다.
+   오른쪽 위 스위치의 손잡이가 현재 언어(A / 가)를 보여 준다 */
+.prose .quote-tr label {
+  display: block;
+  position: relative;
+  padding-right: 3.2rem;
   cursor: pointer;
-  list-style: none;
-  font-size: 0.8rem;
+}
+.prose .quote-tr input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.prose .quote-tr label::before {
+  content: '';
+  position: absolute;
+  top: 0.15rem;
+  right: 0;
+  width: 2.4rem;
+  height: 1.3rem;
+  box-sizing: border-box;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--code-bg);
+  transition: border-color 0.15s;
+}
+.prose .quote-tr label::after {
+  content: 'A';
+  position: absolute;
+  top: calc(0.15rem + (1.3rem - 1.1rem) / 2);
+  right: calc(2.4rem - (1.3rem - 1.1rem) / 2 - 1.1rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.1rem;
+  height: 1.1rem;
+  box-sizing: border-box;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--bg);
   color: var(--muted);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-color: var(--line);
+  font-size: 0.62rem;
+  font-weight: 600;
+  line-height: 1;
+  transition: right 0.18s ease, color 0.15s, border-color 0.15s;
 }
-.prose .quote-tr details summary::-webkit-details-marker {
+.prose .quote-tr label:hover::before,
+.prose .quote-tr:has(input:focus-visible) label::before {
+  border-color: var(--accent);
+}
+.prose .quote-tr:has(input:checked) label::before {
+  border-color: var(--accent);
+}
+.prose .quote-tr:has(input:checked) label::after {
+  content: '가';
+  right: calc((1.3rem - 1.1rem) / 2);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.prose .quote-tr .quote-ko,
+.prose .quote-tr:has(input:checked) .quote-en {
   display: none;
 }
-.prose .quote-tr details summary:hover {
-  text-decoration-color: var(--accent);
-}
-.prose .quote-tr .to-en,
-.prose .quote-tr details[open] .to-ko,
-.prose .quote-tr:has(details[open]) .quote-en {
-  display: none;
-}
-.prose .quote-tr details[open] .to-en {
+.prose .quote-tr:has(input:checked) .quote-ko {
   display: inline;
+}
+@media (prefers-reduced-motion: reduce) {
+  .prose .quote-tr label::before,
+  .prose .quote-tr label::after {
+    transition: none;
+  }
 }
 .prose code {
   font-family: var(--mono);

@@ -59,8 +59,8 @@ def estimate_px(body):
     # 출처 절은 본문 분량이 아니다. 링크는 화면에 텍스트만 보이므로 URL 을 뺀다
     prose_src = re.sub(r'^##\s+출처\s*$.*?(?=^##\s|\Z)', '', prose_src, flags=re.S | re.M)
     prose_src = re.sub(r'\[([^\]]*)\]\([^)]*\)', r'\1', prose_src)
-    # 접힌 번역(<details>)은 열기 전까지 화면에 없다
-    prose_src = re.sub(r'<details>.*?</details>', '', prose_src, flags=re.S)
+    # 인용 번역(quote-ko)은 누르기 전까지 화면에 없다
+    prose_src = re.sub(r'<span class="quote-ko">.*?</span>', '', prose_src, flags=re.S)
     # 태그 이름과 속성은 화면에 보이지 않는다. 안의 텍스트만 센다
     prose_src = re.sub(r'<[^>]+>', '', prose_src)
 
