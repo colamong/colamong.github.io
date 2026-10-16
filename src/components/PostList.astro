@@ -8,6 +8,15 @@ const { posts } = Astro.props;
 
 const fmt = (d: Date) =>
   `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+
+/** 긴 글은 대부분이라 「긴 글」 배지가 구분이 안 된다 — 읽는 시간을 대신 보인다 (BLOG-ADR-002). */
+const CHARS_PER_MINUTE = 500;
+const readingMinutes = (body: string = '') => {
+  const text = body.replace(/<svg\b[\s\S]*?<\/svg>/g, '').replace(/<[^>]+>/g, '');
+  return Math.max(1, Math.round(text.replace(/\s+/g, '').length / CHARS_PER_MINUTE));
+};
+const badgeOf = (p: any) =>
+  p.data.kind === 'long' ? `${readingMinutes(p.body)}분` : KIND_LABEL[p.data.kind];
 ---
 
 <ul class="list">
@@ -24,7 +33,7 @@ const fmt = (d: Date) =>
           >
             <span class="row__top">
               <span class="row__title">{p.data.title}</span>
-              <span class="badge">{KIND_LABEL[p.data.kind]}</span>
+              <span class="badge">{badgeOf(p)}</span>
               <span class="row__date">{fmt(p.data.date)}</span>
             </span>
           </a>
