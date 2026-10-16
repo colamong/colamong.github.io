@@ -153,6 +153,12 @@ def handle_api_error(body: str, format_message=format_message) -> ApiFailure:
 반면 사람용 메시지는 우리 코드 안에서 언제든 고칠 수 있는 문구입니다.\
 자주 바뀌는 문구 대신, 쉽게 바뀌지 않는 약속에 기대도록 옮긴 겁니다.
 
+HTTP API 에러 응답 표준인 [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457#section-3.1.4)도 같은 기준을 둡니다.
+
+<blockquote class="quote-tr">
+<label title="눌러서 번역 보기"><input type="checkbox"><span class="quote-en">Consumers SHOULD NOT parse the "detail" member for information; extensions are more suitable and less error-prone ways to obtain such information.</span><span class="quote-ko">사용하는 쪽은 정보를 얻으려고 "detail" 필드를 파싱하면 안 됩니다. 확장 필드가 더 알맞고 오류도 적은 방법입니다.</span></label>
+</blockquote>
+
 그 약속이 깨지는 경우, 즉 응답에서 `code` 를 읽을 수 없을 때의 동작은 따로 정해 두어야 합니다.
 
 ## 에러코드를 읽을 수 없는 경우
