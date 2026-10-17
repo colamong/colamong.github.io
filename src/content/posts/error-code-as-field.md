@@ -11,32 +11,11 @@ part: 2
 ---
 
 [1부](/posts/masked-log-lost-error-code/)에서는 로그의 자격증명을 가리다가 에러코드 파싱이 깨진 일을 다뤘습니다.\
-사람이 읽으라고 만든 메시지를 코드도 파싱하고 있었습니다.\
+에러코드 파서가 응답 본문이 아니라 사람이 읽는 메시지를 읽고 있었습니다.\
 이번 글에서는 같은 실수가 구조상 생기지 않게 하려면 무엇을 바꿔야 하는지 살펴봅니다.
 
 아직 실제 서비스에 적용한 개선책은 아닙니다.\
-검토 중인 설계를 설명하려고 만든 예시이고, 코드는 설명용 Python 입니다.\
-실제 서비스의 언어나 클래스 구조와는 관계가 없습니다.
-
-## 1부 구조의 의존 관계
-
-1부의 구조를 설명용 코드로 줄이면 이렇습니다.
-
-```python
-def build_message(body: str) -> str:
-    return f"API 호출 실패: {mask(body)}"
-
-def extract_code(message: str) -> int | None:
-    match = re.search(r'"code":(\d+)', message)
-    return int(match.group(1)) if match else None
-```
-
-`extract_code` 가 읽는 것은 응답 본문이 아니라 `build_message` 가 만든 메시지입니다.\
-그래서 메시지 안에 `"code":숫자` 모양이 남아 있어야 에러코드를 읽을 수 있습니다.\
-1부의 마스킹 수정은 메시지를 `code=401 (본문 생략)` 으로 바꿨고, 그 순간 `extract_code` 의 입력도 바뀌었습니다.\
-여기서 `401` 은 1부와 같은 설명용 값입니다.
-
-에러코드를 쓰는 코드가 사람용 메시지의 모양에 기대고 있었던 겁니다.
+검토 중인 설계를 설명하는 예시이고, 코드는 설명용 Python 입니다.
 
 ## 검토한 세 가지 방향
 
@@ -44,7 +23,7 @@ def extract_code(message: str) -> int | None:
 
 | 방향 | 방법 | 남는 문제 |
 |---|---|---|
-| 파서 확장 | `extract_code` 가 `code=401` 모양도 읽도록 정규식 추가 | 다음에 문구가 바뀌면 다시 깨짐 |
+| 파서 확장 | 파서가 `code=401` 모양도 읽도록 정규식 추가 | 다음에 문구가 바뀌면 다시 깨짐 |
 | 필드 단위 마스킹 | 메시지를 JSON 그대로 두고 `token` 값만 가림 | 메시지 형식을 바꾸는 다른 수정에는 그대로 깨짐 |
 | 에러코드 필드 분리 | 응답 본문에서 에러코드를 따로 읽어 필드로 전달 | 응답 본문 형식에는 여전히 의존 |
 
@@ -63,21 +42,8 @@ def extract_code(message: str) -> int | None:
 ```python
 @dataclass
 class ApiFailure:
-    code: int | None
-    message: str
-
-def read_code(body: str) -> int | None:
-    try:
-        data = json.loads(body)
-    except json.JSONDecodeError:
-        return None
-    if not isinstance(data, dict):
-        return None
-    code = data.get("code")
-    return code if type(code) is int else None
-
-def format_message(code: int | None) -> str:
-    return f"API 호출 실패: code={code} (본문 생략)"
+    code: int | None  # 코드가 읽는 값
+    message: str      # 사람이 읽는 값
 
 def handle_api_error(body: str, format_message=format_message) -> ApiFailure:
     code = read_code(body)
@@ -88,6 +54,7 @@ def handle_api_error(body: str, format_message=format_message) -> ApiFailure:
     return failure
 ```
 
+`read_code` 는 응답 본문을 JSON 으로 읽어 정수 `code` 만 돌려주고, 그 밖의 경우에는 빈 값을 돌려줍니다.\
 에러코드가 필요한 코드는 이제 `failure.code` 를 읽습니다.\
 사람은 `failure.message` 를 읽습니다.
 
@@ -182,18 +149,11 @@ HTTP API 에러 응답 표준인 [RFC 9457](https://www.rfc-editor.org/rfc/rfc94
 
 ## 경고와 구조 변경의 차이
 
-1부 구조에 이 경고만 더했다고 가정해 보겠습니다.\
-마스킹 수정 뒤에는 `extract_code` 가 매번 빈 값을 돌려주니, 수정 직후부터 경고가 찍혔을 겁니다.\
-13일씩 걸리지는 않았을 겁니다.
+1부 구조에 이 경고만 더했다면, 마스킹 수정 직후부터 경고가 찍혀 13일씩 걸리지는 않았을 겁니다.\
+그래도 파싱은 깨진 채로 남고, 누군가 경고를 보고 파서를 고쳐야 합니다.\
+경고는 실패를 빨리 알려 줄 뿐입니다.
 
-그래도 파싱은 여전히 깨져 있습니다.\
-누군가 경고를 보고 파서를 고쳐야 합니다.\
-경고는 실패를 빨리 알려 줄 뿐이고, 실패가 생기는 것 자체를 막지는 않습니다.
-
-구조 변경은 실패가 생기는 경로를 줄입니다.\
-에러코드를 쓰는 코드가 메시지를 읽지 않으니, 메시지를 고치는 수정으로는 파싱이 깨지지 않습니다.\
+반면 구조를 바꾸면 메시지를 고치는 수정으로는 파싱이 깨지지 않습니다.\
 응답 형식이 바뀌는 경우는 여전히 남기 때문에 이 예시에서는 둘 다 둡니다.
 
-남은 것은 이 동작들이 실제로 지켜지는지 확인하는 일입니다.\
-1부의 테스트는 마스킹 전 메시지를 넣어서 바로 그 확인을 놓쳤습니다.\
-테스트를 어떻게 짜야 하는지는 3부에서 이어집니다.
+이 동작들이 실제로 지켜지는지 확인하는 테스트는 3부에서 이어집니다.

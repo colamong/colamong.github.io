@@ -14,30 +14,15 @@ part: 3
 실제 서버에서는 마스킹을 거친 메시지가 파서로 갔는데, 테스트는 그 단계를 건너뛰었습니다.\
 그래서 13일 동안 테스트가 계속 통과했습니다.
 
-[2부](/posts/error-code-as-field/)에서는 에러코드를 메시지가 아니라 별도 필드로 전달하는 구조를 살펴봤습니다.\
-이번 글에서는 그 구조가 실제로 지켜지는지 확인하는 테스트를 짭니다.\
-2부와 마찬가지로 실제 서비스에 적용한 것이 아니라 설명용 예시이고, 코드는 Python 과 pytest 입니다.
-
-## 테스트 대상
-
-테스트할 함수는 2부의 `handle_api_error` 입니다.
-
-```python
-def handle_api_error(body: str, format_message=format_message) -> ApiFailure:
-    code = read_code(body)
-    if code is None:
-        logger.warning("에러코드를 읽을 수 없음: 응답 형식이 예상과 다름")
-    failure = ApiFailure(code=code, message=format_message(code))
-    logger.error(failure.message)
-    return failure
-```
-
-응답 본문을 받아 에러코드를 읽고, 사람이 읽을 메시지를 만들고, 로그를 남깁니다.\
-실제 서버가 거치는 단계가 이 함수 하나에 모여 있습니다.
+이번 글에서는 [2부](/posts/error-code-as-field/)의 구조가 실제로 지켜지는지 확인하는 테스트를 짭니다.\
+2부와 마찬가지로 설명용 예시이고, 코드는 Python 과 pytest 입니다.
 
 ## 손으로 만든 메시지와 실제 처리 흐름
 
-1부의 테스트가 놓친 것은 입력이 거치는 길이었습니다.
+테스트할 함수는 2부의 `handle_api_error` 입니다.\
+응답 본문을 받아 에러코드를 읽고, 사람이 읽을 메시지를 만들고, 로그를 남깁니다.\
+실제 서버가 거치는 단계가 이 함수 하나에 모여 있습니다.\
+1부의 테스트는 이 단계를 건너뛰고 파서에 메시지를 바로 넣었습니다.
 
 <figure>
 <svg viewBox="0 0 560 200" role="img" aria-label="1부 테스트는 손으로 만든 메시지를 파서에 바로 넣었고, 3부 테스트는 응답 본문을 실제 처리 함수에 넣어 메시지와 로그를 함께 확인한다" style="width:100%;height:auto">
@@ -108,47 +93,13 @@ def test_code_does_not_depend_on_message_format():
 누군가 나중에 메시지에서 에러코드를 다시 뽑도록 고치면, 두 메시지 어디에도 `"code":` 모양이 없어서 이 테스트가 실패합니다.\
 1부의 의존 관계가 다시 생기는 수정을 잡는 테스트입니다.
 
-## 메시지와 로그의 토큰
+## 나머지 두 테스트와 보장 범위
 
-두 번째 테스트는 마스킹을 거친 최종 결과에 토큰이 남지 않는지 봅니다.
-
-```python
-def test_token_not_in_message_or_logs(caplog):
-    with caplog.at_level(logging.WARNING, logger="api"):
-        failure = handle_api_error(BODY)
-    assert "example-token-123" not in failure.message
-    assert all("example-token-123" not in r.getMessage() for r in caplog.records)
-```
-
-메시지만 보지 않고 [caplog](https://docs.pytest.org/en/stable/how-to/logging.html) 로 실제로 남은 로그 레코드까지 봅니다.\
-메시지 포맷에 응답 본문을 다시 넣거나, 경고에 원문을 붙이는 수정을 잡습니다.
-
-## 에러코드를 읽을 수 없는 응답
-
-세 번째 테스트는 2부에서 정한 동작, 즉 빈 값을 돌려주고 경고를 한 번 남기는지 봅니다.
-
-```python
-@pytest.mark.parametrize("body", [
-    '{"message":"...","token":"example-token-123"}',
-    '{"code":"401","token":"example-token-123"}',
-    'Bad Gateway',
-    '[401]',
-])
-def test_unreadable_code_warns_without_body(body, caplog):
-    with caplog.at_level(logging.WARNING, logger="api"):
-        failure = handle_api_error(body)
-    assert failure.code is None
-    warnings = [r for r in caplog.records if r.levelno == logging.WARNING]
-    assert len(warnings) == 1
-    assert "example-token-123" not in warnings[0].getMessage()
-```
-
-[parametrize](https://docs.pytest.org/en/stable/how-to/parametrize.html) 로 네 가지 응답을 한 번에 넣습니다.\
+같은 방식으로 두 가지를 더 확인합니다.\
+하나는 [caplog](https://docs.pytest.org/en/stable/how-to/logging.html) 로 실제로 남은 로그 레코드까지 보고, 메시지와 로그 어디에도 토큰이 없는지 확인합니다.\
+다른 하나는 [parametrize](https://docs.pytest.org/en/stable/how-to/parametrize.html) 로 에러코드를 읽을 수 없는 응답 네 가지를 넣습니다.\
 `code` 가 없는 경우, 문자열인 경우, JSON 이 아닌 경우, JSON 이지만 객체가 아닌 경우입니다.\
-각 경우에 빈 값을 돌려주고, 경고를 한 번 남기고, 그 경고에 토큰이 없는지 확인합니다.\
-1부처럼 조용히 빈 값만 돌려주도록 되돌아가면 경고 개수 확인에서 실패합니다.
-
-## 테스트가 보장하는 범위
+각 경우에 빈 값을 돌려주고 경고를 한 번만 남기는지 봅니다.
 
 세 테스트가 지키는 것은 `handle_api_error` 한 경로입니다.
 
