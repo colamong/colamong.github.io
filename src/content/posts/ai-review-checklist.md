@@ -134,5 +134,5 @@ part: 2
 ## 출처
 
 - [GitHub 저장소 사용자 지정 지침](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions) — 프로젝트 맥락 제공
-- [SWR-Bench](https://arxiv.org/html/2509.01494v2) — 여러 리뷰의 통합 실험
+- [SWR-Bench](https://arxiv.org/html/2509.01494v2) — 2025년, 여러 리뷰의 통합 실험
 - [GitHub Copilot 책임 있는 사용 문서](https://docs.github.com/en/copilot/responsible-use/code-review) — 리뷰 코멘트 검증
