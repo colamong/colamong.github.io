@@ -19,11 +19,39 @@ part: 1
 AI 리뷰어는 건네받은 자료 안에서만 판단하므로, 통과 판정만으로 확인이 충분했다고 볼 수는 없습니다.\
 리뷰 기록에서는 다음 3가지 문제가 드러났습니다.
 
-| 문제 | 원인 | 제 사례 |
-|---|---|---|
-| 놓친 결함 | 어디까지 확인했는지 밝히지 않은 통과 판정 | "발행 가능" 판정 뒤 추가 결함 |
-| 없는 결함의 지적 | 리뷰 자료에서 빠진 저장소 규칙 | 올바른 정규식을 고치라는 지적 |
-| 틀린 지적의 수용 | 원본과 다른 리뷰 주장을 그대로 받아들임 | 틀린 줄 번호를 따른 AI 에이전트 |
+<figure>
+<svg viewBox="0 0 640 170" role="img" aria-labelledby="review-gaps-title review-gaps-desc" style="width:100%;height:auto">
+  <title id="review-gaps-title">판정과 근거가 어긋나는 3가지 지점</title>
+  <desc id="review-gaps-desc">요청 자료의 전제 누락은 없는 결함의 지적으로, 확인 범위 누락은 결함의 놓침으로, 원본 대조 누락은 틀린 지적의 수용으로 이어질 수 있다.</desc>
+  <defs>
+    <marker id="review-gaps-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0L10 5L0 10z" fill="currentColor"/>
+    </marker>
+  </defs>
+  <g fill="none" stroke="currentColor" stroke-opacity="0.5">
+    <rect x="8" y="12" width="188" height="72" rx="6"/>
+    <rect x="226" y="12" width="188" height="72" rx="6"/>
+    <rect x="444" y="12" width="188" height="72" rx="6"/>
+  </g>
+  <g fill="none" stroke="currentColor" marker-end="url(#review-gaps-arrow)">
+    <path d="M198 48H220"/>
+    <path d="M416 48H438"/>
+  </g>
+  <g fill="currentColor" text-anchor="middle" font-size="14">
+    <text x="102" y="41" font-weight="600">리뷰 요청 자료</text>
+    <text x="102" y="65">판정에 필요한 전제</text>
+    <text x="320" y="41" font-weight="600">AI 리뷰어의 판정</text>
+    <text x="320" y="65">확인 범위</text>
+    <text x="538" y="41" font-weight="600">나 · AI 에이전트</text>
+    <text x="538" y="65">원본과의 대조</text>
+    <text x="102" y="115">없는 결함의 지적</text>
+    <text x="320" y="115">놓친 결함</text>
+    <text x="538" y="115">틀린 지적의 수용</text>
+    <text x="320" y="153" font-size="13">각 단계의 근거와 판정 사이의 불일치</text>
+  </g>
+</svg>
+<figcaption>어느 단계에서 판정과 근거가 어긋났을까요?</figcaption>
+</figure>
 
 ## 통과 판정과 실제 확인 범위
 
@@ -74,40 +102,6 @@ AI 리뷰어는 배포 환경별 자원 이름을 검사하는 정규식이 환�
 
 [GitHub 공식 문서](https://docs.github.com/en/copilot/responsible-use/code-review)도 Copilot이 실제로는 없는 결함을 지적할 수 있으니, 코멘트를 검토한 뒤에 조치하라고 안내합니다.\
 리뷰가 틀렸더라도 고치기 전에 원본과 다시 대조하면 걸러낼 수 있습니다.
-
-<figure>
-<svg viewBox="0 0 640 170" role="img" aria-labelledby="review-gaps-title review-gaps-desc" style="width:100%;height:auto">
-  <title id="review-gaps-title">판정과 근거가 어긋나는 3가지 지점</title>
-  <desc id="review-gaps-desc">요청 자료의 전제 누락은 없는 결함의 지적으로, 확인 범위 누락은 결함의 놓침으로, 원본 대조 누락은 틀린 지적의 수용으로 이어질 수 있다.</desc>
-  <defs>
-    <marker id="review-gaps-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-      <path d="M0 0L10 5L0 10z" fill="currentColor"/>
-    </marker>
-  </defs>
-  <g fill="none" stroke="currentColor" stroke-opacity="0.5">
-    <rect x="8" y="12" width="188" height="72" rx="6"/>
-    <rect x="226" y="12" width="188" height="72" rx="6"/>
-    <rect x="444" y="12" width="188" height="72" rx="6"/>
-  </g>
-  <g fill="none" stroke="currentColor" marker-end="url(#review-gaps-arrow)">
-    <path d="M198 48H220"/>
-    <path d="M416 48H438"/>
-  </g>
-  <g fill="currentColor" text-anchor="middle" font-size="14">
-    <text x="102" y="41" font-weight="600">리뷰 요청 자료</text>
-    <text x="102" y="65">판정에 필요한 전제</text>
-    <text x="320" y="41" font-weight="600">AI 리뷰어의 판정</text>
-    <text x="320" y="65">확인 범위</text>
-    <text x="538" y="41" font-weight="600">나 · AI 에이전트</text>
-    <text x="538" y="65">원본과의 대조</text>
-    <text x="102" y="115">없는 결함의 지적</text>
-    <text x="320" y="115">놓친 결함</text>
-    <text x="538" y="115">틀린 지적의 수용</text>
-    <text x="320" y="153" font-size="13">각 단계의 근거와 판정 사이의 불일치</text>
-  </g>
-</svg>
-<figcaption>어느 단계에서 판정과 근거가 어긋났을까요?</figcaption>
-</figure>
 
 2부에서는 이 3가지를 확인할 수 있도록 리뷰 요청과 결과 대조 방법을 정리합니다.
 

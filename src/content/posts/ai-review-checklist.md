@@ -16,17 +16,41 @@ part: 2
 1부의 사례를 바탕으로 리뷰 요청과 결과 확인에 쓸 기준을 5가지로 정리했습니다.\
 실제 적용한 방법과, 사례에서 빠졌던 확인을 다음 요청에 넣기 위한 제안을 함께 담았습니다.
 
-| 단계 | 기준 | 요청·대조 항목 |
-|---|---|---|
-| 요청 | 실제 사용 경로 | 진입점에서 변경 코드까지의 경로 |
-| 요청 | 판정의 전제 | 요구사항과 저장소 규칙 |
-| 요청 | 항목별 확인 내역 | 통과 근거와 미확인 범위 |
-| 추가 리뷰 | 서로 다른 관점 | 각 리뷰의 담당 관점과 근거 |
-| 결과 확인 | 원본과의 일치 | 지적별 수용·기각 근거 |
+<figure>
+<svg viewBox="0 0 640 170" role="img" aria-labelledby="review-checks-title review-checks-desc" style="width:100%;height:auto">
+  <title id="review-checks-title">리뷰 요청과 결과 대조의 흐름</title>
+  <desc id="review-checks-desc">실제 경로와 전제를 리뷰 요청에 넣고 항목별 근거를 받는다. 추가 리뷰에는 관점을 나누고, 수정 전 원본과 대조해 수용 또는 기각한다.</desc>
+  <defs>
+    <marker id="review-checks-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0L10 5L0 10z" fill="currentColor"/>
+    </marker>
+  </defs>
+  <g fill="none" stroke="currentColor" stroke-opacity="0.5">
+    <rect x="8" y="16" width="188" height="72" rx="6"/>
+    <rect x="226" y="16" width="188" height="72" rx="6"/>
+    <rect x="444" y="16" width="188" height="72" rx="6"/>
+  </g>
+  <g fill="none" stroke="currentColor" marker-end="url(#review-checks-arrow)">
+    <path d="M198 52H220"/>
+    <path d="M416 52H438"/>
+  </g>
+  <g fill="currentColor" font-size="14" text-anchor="middle">
+    <text x="102" y="45" font-weight="600">리뷰 요청</text>
+    <text x="102" y="69">실제 경로 · 전제</text>
+    <text x="320" y="45" font-weight="600">항목별 판정</text>
+    <text x="320" y="69">확인 근거 · 미확인 범위</text>
+    <text x="538" y="45" font-weight="600">수용 · 기각</text>
+    <text x="538" y="69">원본과의 대조</text>
+    <text x="320" y="126">추가 리뷰의 관점 분담</text>
+    <text x="320" y="153" font-size="13">충돌한 지적의 원본 대조</text>
+  </g>
+</svg>
+<figcaption>요청에서 수정까지 어떤 근거를 남겨야 할까요?</figcaption>
+</figure>
 
 ## 1. 실제 사용 경로를 담은 확인 범위
 
-한 웹 페이지의 CSS 리뷰에서 AI 리뷰어는 근거 파일의 값을 대조하고도, 그 파일이 실제 화면에 쓰이지 않는다는 점을 놓쳤습니다.\
+<a class="xref" href="/posts/ai-reviewer-misses-bugs/" data-quote="AI 리뷰어는 CSS 값을 근거 문서와 대조했고, 값은 대부분 맞았습니다. 그런데 그 값을 가져온 파일은 지금 화면이 불러오지 않는 파일이었습니다.">1부의 CSS 사례</a>에서 AI 리뷰어는 근거 파일이 실제 화면에 쓰이는지 확인하지 않았습니다.\
 따라서 프롬프트나 PR 설명에는 파일 목록에 더해 진입점에서 변경 코드까지의 경로를 적는 편이 좋겠습니다.\
 다음은 그 방식을 코드 리뷰에 적용한 요청 예시입니다.
 
@@ -39,7 +63,7 @@ AI 리뷰어가 호출 관계를 확인하지 못한 구간은 미확인으로 �
 
 ## 2. 판정에 필요한 전제 문서
 
-사내 문서 검사 스크립트 리뷰에서는 저장소 규칙을 빠뜨린 탓에 정상 정규식이 결함으로 지적됐습니다.\
+<a class="xref" href="/posts/ai-reviewer-misses-bugs/" data-quote="이 AI 리뷰어는 제가 동봉한 자료만 읽을 수 있었는데, 저는 검사 규칙과 스크립트만 보내고 저장소 규칙 문서를 빠뜨렸습니다.">1부의 정규식 사례</a>는 제가 저장소 규칙 문서를 빠뜨려서 생긴 오판이었습니다.\
 빠뜨린 저장소 규칙 문서를 함께 보냈다면, AI 리뷰어가 그 규칙을 보고 판정할 수 있었을 겁니다.
 
 [GitHub의 저장소 사용자 지정 지침](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions)도 프로젝트 이해에 필요한 맥락을 제공하는 용도입니다.\
@@ -74,19 +98,15 @@ AI 리뷰어가 호출 관계를 확인하지 못한 구간은 미확인으로 �
 저는 서로 다른 AI 리뷰어 둘에게 관점을 나누어 맡겼습니다.\
 한쪽은 문장과 작성 규칙을, 다른 쪽은 독자가 이해하기 어려운 대목과 사실관계가 맞는지를 확인하도록 했습니다.
 
-[SWR-Bench](https://arxiv.org/html/2509.01494v2)는 실제 GitHub PR 1,000건으로 리뷰 도구와 모델을 평가한 연구입니다.\
-이 연구는 같은 모델에게 같은 PR을 10번 따로 리뷰하게 한 뒤, 그 결과를 하나로 합쳐 유효한 지적을 추렸습니다.\
-그러자 F1 점수가 한 번만 리뷰했을 때보다 상대적으로 최대 43.67% 높아졌습니다.\
-관점을 나눈 리뷰가 아니라 같은 모델의 리뷰를 여러 번 합친 결과입니다.\
-그래도 리뷰 한 번의 결과를 그대로 믿기보다, 여러 결과를 모아 걸러 내는 편이 낫다는 근거로는 볼 수 있습니다.
+[SWR-Bench](https://arxiv.org/html/2509.01494v2)에서는 같은 모델이 같은 PR을 10번 따로 리뷰한 결과를 합치자, F1 점수가 한 번만 리뷰했을 때보다 상대적으로 최대 43.67% 높아졌습니다.\
+관점을 나눈 리뷰는 아니지만, 리뷰 한 번의 결과를 그대로 믿기보다 여러 결과를 모아 걸러 내는 편이 낫다는 근거로 볼 수 있습니다.
 
 추가 리뷰를 요청한다면 앞선 리뷰의 확인 내역을 보고, 덜 다룬 관점을 지정할 수 있습니다.\
 결과가 충돌할 때는 같은 주장에 동의한 AI 리뷰어 수로 판단하기보다, 각 주장의 근거를 원본과 대조해야 합니다.
 
 ## 5. 수정 전 지적별 원본 대조
 
-제가 작업을 맡긴 AI 에이전트는 원본 파일을 열어 두고도 AI 리뷰어의 틀린 줄 번호를 따랐습니다.\
-반대로 정규식 지적은 저장소 규칙 원문과 대조해 기각할 수 있었습니다.\
+1부에서 AI 에이전트는 원본을 열어 두고도 <a class="xref" href="/posts/ai-reviewer-misses-bugs/" data-quote="제가 작업을 맡긴 AI 에이전트는 원본 CSS 파일을 열어 두고도, 값의 위치를 실제 140줄이 아닌 AI 리뷰어가 주장한 141줄로 받아들였습니다.">틀린 줄 번호를 따랐고</a>, 정규식 지적은 저장소 규칙 원문과 대조해 기각했습니다.\
 [GitHub 공식 문서](https://docs.github.com/en/copilot/responsible-use/code-review)도 리뷰 코멘트를 검증하라고 권고합니다.\
 제 작업에서는 수정 전에 다음 3가지를 확인해야 합니다.
 
@@ -98,41 +118,6 @@ AI 리뷰어가 호출 관계를 확인하지 못한 구간은 미확인으로 �
 
 수정을 AI 에이전트에게 맡길 때도 지적별 수용·기각 이유와 원본 위치를 먼저 남기도록 요청할 수 있습니다.\
 원본과 주장이 어긋나면 그 항목의 수정을 보류하고, 어느 조건이 다른지부터 확인합니다.
-
-<figure>
-<svg viewBox="0 0 640 170" role="img" aria-labelledby="review-checks-title review-checks-desc" style="width:100%;height:auto">
-  <title id="review-checks-title">리뷰 요청과 결과 대조의 흐름</title>
-  <desc id="review-checks-desc">실제 경로와 전제를 리뷰 요청에 넣고 항목별 근거를 받는다. 추가 리뷰에는 관점을 나누고, 수정 전 원본과 대조해 수용 또는 기각한다.</desc>
-  <defs>
-    <marker id="review-checks-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-      <path d="M0 0L10 5L0 10z" fill="currentColor"/>
-    </marker>
-  </defs>
-  <g fill="none" stroke="currentColor" stroke-opacity="0.5">
-    <rect x="8" y="16" width="188" height="72" rx="6"/>
-    <rect x="226" y="16" width="188" height="72" rx="6"/>
-    <rect x="444" y="16" width="188" height="72" rx="6"/>
-  </g>
-  <g fill="none" stroke="currentColor" marker-end="url(#review-checks-arrow)">
-    <path d="M198 52H220"/>
-    <path d="M416 52H438"/>
-  </g>
-  <g fill="currentColor" font-size="14" text-anchor="middle">
-    <text x="102" y="45" font-weight="600">리뷰 요청</text>
-    <text x="102" y="69">실제 경로 · 전제</text>
-    <text x="320" y="45" font-weight="600">항목별 판정</text>
-    <text x="320" y="69">확인 근거 · 미확인 범위</text>
-    <text x="538" y="45" font-weight="600">수용 · 기각</text>
-    <text x="538" y="69">원본과의 대조</text>
-    <text x="320" y="126">추가 리뷰의 관점 분담</text>
-    <text x="320" y="153" font-size="13">충돌한 지적의 원본 대조</text>
-  </g>
-</svg>
-<figcaption>요청에서 수정까지 어떤 근거를 남겨야 할까요?</figcaption>
-</figure>
-
-다음 리뷰 요청에는 검토 항목 옆에 확인 근거와 미확인 범위 칸부터 넣을 수 있습니다.\
-돌아온 결과를 원본과 대조하면, 수정할 항목과 자료를 보완해 다시 물을 항목을 나눌 수 있습니다.
 
 ## 출처
 

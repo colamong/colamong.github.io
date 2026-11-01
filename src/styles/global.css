@@ -464,3 +464,38 @@ a.row__link:hover .row__title {
   color: var(--muted);
   text-align: center;
 }
+
+/* 다른 편 문장 가리키기 — 호버·포커스 시 원문 표시, 클릭 시 해당 편으로 이동 */
+.prose a.xref {
+  position: relative;
+  color: inherit;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+.prose a.xref::after {
+  content: attr(data-quote);
+  position: absolute;
+  left: 0;
+  top: calc(100% + 6px);
+  z-index: 10;
+  width: max-content;
+  max-width: min(24rem, 80vw);
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  white-space: normal;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.12);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.12s;
+}
+.prose a.xref:hover::after,
+.prose a.xref:focus-visible::after {
+  opacity: 1;
+  visibility: visible;
+}
